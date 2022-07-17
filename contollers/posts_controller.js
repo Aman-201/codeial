@@ -1,4 +1,4 @@
 module.exports.posts=function(req,res)
 {
-    res.end('<h1> users posts </h1>')
+   return res.render('home',{title:'Posts'});
 }
