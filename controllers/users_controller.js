@@ -58,5 +58,24 @@ User.findOne({'email':req.body.email},function(err,result)
 
 // sign in and create a session for the user
 module.exports.createSession = function(req, res){
+    User.findOne({'email':req.body.email},function(err,user)
+    {
+        if(err){console.log("error in finding the entry");}
+
+        if(user)
+        {
+            if(user.password!=req.body.password)
+            {
+                console.log("password not matched");
+               return res.redirect('back');
+            }
+            res.cookie("user_id",user.id);
+            return res.redirect('/users/profile');
+        }
+        else
+        {
+            res.redirect('back');
+        }
+    })
     // TODO later
 }
