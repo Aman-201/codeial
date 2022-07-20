@@ -1,9 +1,27 @@
 const User=require('../models/user');
 const bodyParser=require('body-parser')
 module.exports.profile = function(req, res){
-    return res.render('user_profile', {
-        title: 'User Profile'
-    })
+    console.log(req.cookies.user_id);
+    if(req.cookies.user_id)
+    {User.findById(req.cookies.user_id,function(err,user)
+    {
+       
+        if(err){console.log("session time out"); return res.redirect('/users/sign-in');}
+        if(user)
+        {
+            console.log(user);
+            return res.render('user_profile', {
+                title:user.name,email:user.email
+              })
+        }
+        else{
+            console.log("not logged in");
+            return res.redirect('/users/sign-in')
+        }
+    })}
+    else
+    return res.redirect('/users/sign-in');
+    
 }
 
 
@@ -78,4 +96,11 @@ module.exports.createSession = function(req, res){
         }
     })
     // TODO later
+}
+
+module.exports.signOut=function(req,res){
+    res.clearCookie('user_id');
+    return res.redirect('/users/sign-in');
+
+
 }
